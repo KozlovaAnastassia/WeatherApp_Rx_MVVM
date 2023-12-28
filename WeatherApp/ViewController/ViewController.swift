@@ -28,7 +28,6 @@ final class ViewController: UIViewController, ViewDelegate {
         lm.delegate = self
         lm.desiredAccuracy = kCLLocationAccuracyKilometer
         lm.requestWhenInUseAuthorization()
-        lm.requestAlwaysAuthorization()
         lm.startUpdatingLocation()
         return lm
     }()
@@ -37,6 +36,13 @@ final class ViewController: UIViewController, ViewDelegate {
     private var viewModel: IWeatherViewModel
     private let disposedBag = DisposeBag()
     
+    init(viewModel: IWeatherViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError(Constants.Errors.initError)
+    }
     override func loadView() {
         super.loadView()
         view = weatherView
@@ -53,13 +59,10 @@ final class ViewController: UIViewController, ViewDelegate {
         updateInterface()
         locationManager.requestLocation()
     }
-    init(viewModel: IWeatherViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    required init?(coder: NSCoder) {
-        fatalError(Constants.Errors.initError)
-    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        locationManager.stopUpdatingLocation()
+     }
     
     func getDataForCell(indexPath: IndexPath) -> CellModel {
         viewModel.getDataForCell(indexPath: indexPath)
@@ -105,7 +108,6 @@ extension ViewController: CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        locationManager.startUpdatingLocation()
         state = .failure
     }
     

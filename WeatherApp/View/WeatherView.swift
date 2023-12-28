@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 private extension String {
-    static let errorLabel = "Search the app so we can get your current location"
+    static let errorLabel = "Reload the app so we can get your current location or use search"
     static let searchBarPlaceholder = "Поиск"
 }
 
@@ -55,6 +55,7 @@ final class WeatherView: UIView {
         label.text = String.errorLabel
         label.textAlignment = .center
         label.numberOfLines = Int.errorLabelNumbersOfLines
+        label.font = Constants.Fonts.baseFont
         label.textColor = .black
         label.isHidden = true
        return label
@@ -144,7 +145,7 @@ final class WeatherView: UIView {
         }
         errorLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.equalToSuperview()
+            make.width.equalToSuperview().inset(CGFloat.widthInset)
         }
         temperatureImage.snp.makeConstraints { make in
             make.width.equalTo(CGFloat.imageWidth)
